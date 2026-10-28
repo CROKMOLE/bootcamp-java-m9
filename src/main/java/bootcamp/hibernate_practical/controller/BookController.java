@@ -7,6 +7,7 @@ import bootcamp.hibernate_practical.service.BookService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
+import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,6 +24,7 @@ public class BookController {
     }
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public BookResponse createBook(@Valid @RequestBody CreateBookRequest createBookRequest) {
         return bookService.createBook(createBookRequest);
     }
@@ -38,6 +40,7 @@ public class BookController {
     }
 
     @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.ACCEPTED)
     public BookResponse updateBook(@PathVariable @Positive Long id, @Valid @RequestBody UpdateBookRequest updateBookRequest) {
         return bookService.updateBook(id, updateBookRequest);
     }
