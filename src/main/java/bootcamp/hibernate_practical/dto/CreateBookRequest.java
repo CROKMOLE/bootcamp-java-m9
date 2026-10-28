@@ -10,7 +10,7 @@ public record CreateBookRequest(
     String title,
 
     @NotBlank(message = "Author of the book is required")
-    @Pattern(regexp = "^[A-Za-z0-9._~-]+$",
+    @Pattern(regexp = "^[\\p{L} .'-]+$",
             message = "author should be one word and can contain only letters, digits, '.', '_', '~' and '-'")
     String author,
 
@@ -18,5 +18,5 @@ public record CreateBookRequest(
     String genre,
 
     @Positive(message = "Year should be positive")
-    int publicationYear
+    Integer publicationYear
 ) {}

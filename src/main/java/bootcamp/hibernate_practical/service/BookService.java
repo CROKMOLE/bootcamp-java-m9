@@ -5,11 +5,15 @@ import bootcamp.hibernate_practical.dto.CreateBookRequest;
 import bootcamp.hibernate_practical.dto.UpdateBookRequest;
 import bootcamp.hibernate_practical.entity.Book;
 import bootcamp.hibernate_practical.repository.BookRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
 @Service
+@RestControllerAdvice
 public class BookService {
     private final BookRepository bookRepository;
 
@@ -31,41 +35,33 @@ public class BookService {
 
     public List<BookResponse> getAllBooks() {
         List<Book> booksList = bookRepository.findAll();
-        // Fetch all books from the repository
-        // Convert each Book entity into BookResponse DTO
-        // Return the list
         return mapToResponse(booksList);
     }
 
     public BookResponse getBookById(Long id) {
         Book bookById = bookRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Book not found with id: " + id));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
-        // Find the book by its ID
-        // Throw RuntimeException if not found
-        // Convert the entity to BookResponse
         return mapToResponse(bookById);
     }
 
     public BookResponse updateBook(Long id, UpdateBookRequest request) {
         Book bookById = bookRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Book not found with id: " + id));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
         bookById.setTitle(request.getTitle());
         bookById.setAuthor(request.getAuthor());
         bookById.setGenre(request.getGenre());
         bookById.setPublicationYear(request.getPublicationYear());
-        bookById.setAvailable(request.isAvailable());
+        bookById.setAvailable(request.getAvailable());
 
         bookRepository.save(bookById);
-        // Find existing book
-        // Update its fields
-        // Save the updated entity
-        // Convert to BookResponse
         return mapToResponse(bookById);
     }
 
     public void deleteBook(Long id) {
+        bookRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         bookRepository.deleteById(id);
     }
 

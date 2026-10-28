@@ -7,12 +7,14 @@ import bootcamp.hibernate_practical.service.BookService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/books")
+@Validated
 public class BookController {
     private final BookService bookService;
 
@@ -50,7 +52,7 @@ public class BookController {
         return bookService.findByAuthor(author);
     }
 
-    @GetMapping("publicated/after/{year}")
+    @GetMapping("/published/after/{year}")
     public List<BookResponse> getByPublicYearAfter(@PathVariable @Positive Long year) {
         return bookService.findPublicatedAfterYear(year);
     }
